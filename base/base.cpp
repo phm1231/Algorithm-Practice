@@ -4,6 +4,7 @@
 #include <cstring>
 #include <vector>
 #include <queue>
+#include <deque>
 #include <stack>
 #include <algorithm>
 #include <string>

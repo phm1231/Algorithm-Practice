@@ -14,6 +14,7 @@
 
 #define ll long long
 #define MAX 1001
+// #define CPP_INOUT true
 
 using namespace std;
 
@@ -23,7 +24,11 @@ void solve();
 
 void init()
 {
-
+    #ifdef CPP_INOUT
+        ios::sync_with_stdio(false);
+        cin.tie(NULL);
+        cout.tie(NULL);
+    #endif
 }
 
 void input()

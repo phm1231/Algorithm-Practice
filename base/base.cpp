@@ -10,6 +10,7 @@
 #include <string>
 #include <iostream>
 #include <climits>
+#include <cmath>
 
 #define ll long long
 #define MAX 1001

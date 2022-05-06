@@ -13,9 +13,7 @@
 #include <cmath>
 
 #define ll long long
-#define MAX 1001
-// #define CPP_INOUT true
-
+#define MAX 100001
 using namespace std;
 
 void init();
@@ -24,11 +22,7 @@ void solve();
 
 void init()
 {
-    #ifdef CPP_INOUT
-        ios::sync_with_stdio(false);
-        cin.tie(NULL);
-        cout.tie(NULL);
-    #endif
+
 }
 
 void input()

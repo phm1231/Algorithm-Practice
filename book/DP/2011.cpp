@@ -52,7 +52,7 @@ void solve()
         {
             printf("0");
             return;
-        }
+        }   
         if(b > 0)
         {
             dp[i] += dp[i-1] % MOD;

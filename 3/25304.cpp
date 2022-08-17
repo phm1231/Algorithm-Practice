@@ -13,28 +13,41 @@
 #include <cmath>
 
 #define ll long long
-#define MAX 100001
+#define MAX 101
 using namespace std;
 
 void init();
 void input();
 void solve();
 
+int x, n;
+int values[MAX];
+int counts[MAX];
+int sum = 0;
+
 void init()
 {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
+    memset(values, 0, sizeof(values));
+    memset(counts, 0, sizeof(counts));
 }
 
 void input()
 {
-
+    cin >> x;
+    cin >> n;
+    for(int i=1; i<=n; i++) cin >> values[i] >> counts[i];
 }
 
 void solve()
 {
-
+    for(int i=1; i<=n; i++)
+    {
+        sum += values[i] * counts[i];
+    }
+    x == sum ? cout << "Yes" : cout << "No";
 }
 
 int main()

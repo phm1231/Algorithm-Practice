@@ -20,6 +20,8 @@ void init();
 void input();
 void solve();
 
+string s;
+
 void init()
 {
     ios::sync_with_stdio(false);
@@ -29,12 +31,12 @@ void init()
 
 void input()
 {
-
+    cin >> s;
 }
 
 void solve()
 {
-
+    cout << s << "??!";
 }
 
 int main()

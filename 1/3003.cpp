@@ -20,21 +20,30 @@ void init();
 void input();
 void solve();
 
+int king, queen, rook, bishop, knight, pawn;
+int k, q, r, b, kn, p;
 void init()
 {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
+
+    king = 1;
+    queen = 1;
+    rook = 2;
+    bishop = 2;
+    knight = 2;
+    pawn = 8;
 }
 
 void input()
 {
-
+    cin >> k >> q >> r >> b >> kn >> p;
 }
 
 void solve()
 {
-
+    cout << king - k << ' ' << queen - q << ' ' << rook - r << ' ' << bishop - b << ' ' << knight - kn << ' ' << pawn - p << '\n';
 }
 
 int main()

@@ -20,21 +20,26 @@ void init();
 void input();
 void solve();
 
+int year;
+int weight;
+
 void init()
 {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
+
+    weight = 543;
 }
 
 void input()
 {
-
+    cin >> year;
 }
 
 void solve()
 {
-
+    cout << year - weight;
 }
 
 int main()

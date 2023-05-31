@@ -1,19 +1,5 @@
 // based problem:
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <vector>
-#include <queue>
-#include <deque>
-#include <stack>
-#include <algorithm>
-#include <string>
-#include <iostream>
-#include <climits>
-#include <cmath>
-#include <map>
-#include <unordered_map>
-#include <set>
+#include <bits/stdc++.h>
 
 #define ll long long
 #define MAX 100001

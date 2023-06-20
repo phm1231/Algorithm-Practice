@@ -23,7 +23,16 @@ void input()
 
 void solve()
 {
-
+    int cur = 0;
+    int answer = 0;
+    for(int i=1; i<=10; i++){
+        int up, down;
+        cin >> down >> up;
+        cur -= down;
+        cur += up;
+        answer = max(cur, answer);
+    }
+    cout << answer;
 }
 
 int main()

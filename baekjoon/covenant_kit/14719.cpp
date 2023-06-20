@@ -1,8 +1,8 @@
 // based problem:
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 
 using namespace std;
-
 
 #define ll long long
 #define MAX 100001
@@ -13,7 +13,7 @@ void solve();
 
 int h, w;
 vector<int> heights;
-vector<vector<int> > board;
+vector<int> tmp_heights;
 
 void init()
 {
@@ -23,23 +23,31 @@ void init()
 void input()
 {
     cin >> h >> w;
-    board.resize(h, vector<int>(w, 0)); // 0 = 빈공간, 1 = 벽, 2 = 물이 고임 
-    heights.resize(w, 0);
     for(int i=0; i<w; i++){
-        cin >> heights[i];
-        for(int j=0; j<heights[i]; j++) board[i][j] = 1;
+        int tmp;
+        cin >> tmp;
+        heights.push_back(tmp);
     }
+    tmp_heights = heights;
 }
 
 void solve()
 {
     int answer = 0;
-    for(int i=0; i<h; i++){
-        for(int j=0; j<w; j++){
-            cout << board[i][j] << ' ';
+    for(int i=1; i<heights.size() - 1; i++){
+        int left = -1;
+        int right = -1;
+
+        for(int j=i-1; j>=0; j--){
+            left = max(heights[j], left);
         }
-        cout << endl;
+        for(int j=i+1; j<heights.size(); j++){
+            right = max(heights[j], right);
+        }
+        int H = min(left, right);
+        if(H > heights[i]) answer += H - heights[i];
     }
+    cout << answer << endl;
 }
 
 int main()

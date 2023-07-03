@@ -16,9 +16,9 @@ void trace(int, int);
 
 int n;
 vector<int> w;
-vector<bool> visited;
-vector<vector<int> > tree;
+vector<vector<int> > g;
 vector<vector<int> > dp;
+vector<bool> visited;
 vector<int> path;
 
 void init()
@@ -30,16 +30,17 @@ void input()
 {
     cin >> n;
     w.resize(n+1, 0);
-    tree.resize(n+1, vector<int>());
+    g.resize(n+1, vector<int>());
     dp.resize(n+1, vector<int>(2, 0));
     visited.resize(n+1, false);
 
     for(int i=1; i<=n; i++) cin >> w[i];
+
     int src, dst;
     for(int i=0; i<n-1; i++){
         cin >> src >> dst;
-        tree[src].push_back(dst);
-        tree[dst].push_back(src);
+        g[src].emplace_back(dst);
+        g[dst].emplace_back(src);
     }
 }
 
@@ -48,38 +49,36 @@ void solve()
     dfs(1);
     visited.clear();
     visited.resize(n+1, false);
-    trace(1, 0);
 
-    cout << max(dp[1][0], dp[1][1]) << endl;
+    trace(1, 0);
     sort(path.begin(), path.end());
+    cout << max(dp[1][0], dp[1][1]) << endl;
     for(int p: path) cout << p << ' ';
 }
 
 void dfs(int here){
-    // here을 포함하지 않음
-    dp[here][0] = 0;
-    // here을 포함함
-    dp[here][1] = w[here];
-    visited[here] = true;
 
-    for(int next: tree[here]){
+    visited[here] = true;
+    dp[here][0] = 0;
+    dp[here][1] = w[here];
+
+    for(int next: g[here]){
         if(visited[next]) continue;
         dfs(next);
 
-        // here을 포함하지 않으면 next를 포함하지 않거나 포함하는 것 중 큰 것을 합침.
         dp[here][0] += max(dp[next][0], dp[next][1]);
-        // here을 포함하면 next를 포함하지 않는 것
         dp[here][1] += dp[next][0];
     }
 }
 
 void trace(int here, int prev){
-    // here을 포함한 경우가 더 큰데, dp[prev][1]을 사용하지 않았을 경우
+    // here을 사용해야 하고, prev를 사용하지 않았을 경우
+    // prev를 사용하면 here을 사용하지 못하므로.
     if(dp[here][1] > dp[here][0] && !visited[prev]){
         visited[here] = true;
         path.push_back(here);
     }
-    for(int next: tree[here]){
+    for(int next: g[here]){
         if(next == prev) continue;
         trace(next, here);
     }

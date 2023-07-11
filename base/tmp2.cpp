@@ -1,70 +1,76 @@
-#include <iostream>
-#include <algorithm>
+#include <string>
 #include <vector>
-
-#define MAX 51
+#include <queue>
 
 using namespace std;
-int N, maxCandy = 0;
-vector<string> candy;
 
-void check();
+typedef struct node{
+    int y1, x1, y2, x2, dir;
+    node(int y1, int x1, int y2, int x2, int d): y1(y1), x1(x1), y2(y2), x2(x2), dir(d) {};
+};
 
-int main(void) {
-    cin >> N;
-
-    for(int i = 0; i < N; i++) {
-        string tmp;
-        cin >> tmp;
-        candy.push_back(tmp);
-    }
+int solution(vector<vector<int>> board) {
+    int answer = 0;
+    int n = board.size();
+    bool visited[100][100][2] = {false, }; // 0은 가로, 1은 세로
+    queue<node> q;
+    q.push({0, 0, 0, 1, 0});
     
-    for(int i = 0; i < N; i++) {
-        for(int j = 0; j < N - 1; j++) {
-            swap(candy[i][j], candy[i][j + 1]);
-            check();
-            swap(candy[i][j], candy[i][j + 1]);
-        }
-    }
-
-    for(int j = 0; j < N; j++) {
-        for(int i = 0; i < N - 1; i++) {
-            swap(candy[i][j], candy[i + 1][j]);
-            check();
-            swap(candy[i][j], candy[i + 1][j]);
-        }
-    }
-
-    cout << maxCandy << '\n';
-
-    return 0;
-}
-
-void check() {
-
-    for(int i = 0; i < N; i++) {
-        int count = 1;
-        for(int j = 0; j < N; j++) {
-            if(candy[i][j] == candy[i][j + 1]) {
-                count++;
+    while(!q.empty()){
+        int qs = q.size();
+        while(qs--){
+            node here = q.front();
+            q.pop();
+            
+            int y1 = here.y1;
+            int x1 = here.x2;
+            int y2 = here.y2;
+            int x2 = here.x2;
+            int dir = here.dir;
+            
+            if(y2 == n-1 && x2 == n-1) return answer;
+            if(visited[y2][x2][dir]) continue;
+            visited[y2][x2][dir] = true;
+            
+            // 상
+            node next = {y1-1, x1, y2-1, x2, dir};
+            if(0 <= y1-1 && !visited[y2-1][x2][dir] && board[y1-1][x1] == 0 && board[y2-1][x2] == 0){
+                q.push(next);
+                // 위로 이동했는데 현재 상태가 가로였을경우, 기존 위치에서 세로로 회전할 수 있음이 보장된다.
+                if(dir == 0){  
+                    q.push({y1-1, x1, y1, x1, 1});
+                    q.push({y2-1, x2, y2, x2, 1});
+                }
             }
-            else {
-                if(maxCandy < count) maxCandy = count;
-                count = 1;
+            // 하
+            next = {y1+1, x1, y2+1, x2, dir};
+            if(y2+1 < n && !visited[y2+1][x2][dir] && board[y1+1][x1] == 0 && board[y2+1][x2] == 0){
+                q.push(next);
+                if(dir == 0){
+                    q.push({y1, x1, y1+1, x1, 1});
+                    q.push({y2, x2, y2+1, x2, 1});
+                }
+            }
+            // 좌
+            next = {y1, x1-1, y2, x2-1, dir};
+            if(0 <= x1-1 && !visited[y2][x2-1][dir] && board[y1][x1-1] == 0 && board[y2][x2-1] == 0){
+                q.push(next);
+                // 좌측으로 이동했는데 현재 상태가 세로였을경우, 가로로 회전할 수 있음이 보장된다.
+                if(dir == 1){
+                    q.push({y1, x1-1, y1, x1, 0});
+                    q.push({y2, x2-1, y2, x2, 0});
+                }
+            }
+            // 우
+            next = {y1, x1+1, y2, x2+1, dir};
+            if(x2+1 < n && !visited[y2][x2+1][dir] && board[y1][x1+1] == 0 && board[y2][x2+1] == 0){
+                q.push(next);
+                if(dir == 1){
+                    q.push({y1, x1, y1, x1+1, 0});
+                    q.push({y2, x2, y2, x2+1, 0});
+                }
             }
         }
-    }
-
-    for(int j = 0; j < N; j++) {
-        int count = 1;
-        for(int i = 0; i < N; i++) {
-            if(candy[i][j] == candy[i + 1][j]) {
-                count++;
-            }
-            else {
-                if(maxCandy < count) maxCandy = count;
-                count = 1;
-            }
-        }
+        answer++;
     }
 }

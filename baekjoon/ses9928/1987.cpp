@@ -1,7 +1,6 @@
 // based problem:
 #include <iostream>
 #include <vector>
-#include <set>
 #include <queue>
 
 using namespace std;
@@ -12,12 +11,11 @@ using namespace std;
 void init();
 void input();
 void solve();
-
+void dfs(int, int, int, vector<bool>& );
 int n, m, answer;
 int dy[] = {-1, 0, 1, 0};
 int dx[] = {0, -1, 0, 1};
 vector<string> bd;
-vector<vector<bool> > visited;
 
 void init()
 {
@@ -27,7 +25,6 @@ void init()
 void input()
 {
     cin >> n >> m;
-    visited.resize(n, vector<bool>(m, false));
     for(int i=0; i<n; i++){
         string str;
         cin >> str;
@@ -37,24 +34,28 @@ void input()
 
 void solve()
 {
-    queue<pair<set<char>&, pair<int, int> > > q;
-    set<char> s;
-
-    int sy = 0;
-    int sx = 0;
-    s.insert(bd[sy][sx]);
-    visited[sy][sx] = 0;
+    vector<bool> isVisited(26, false);
     answer = 1;
-
-    q.push(make_pair(s, make_pair(y, x)));
-    while(!q.empty()){
-        set<char> alpha = q.front().first;
-        int y = q.front().second.first;
-        int x = q.front().second.second;
-    }
+    isVisited[bd[0][0] - 'A'] = true;
+    dfs(0, 0, 1, isVisited);    
+    cout << answer;
 }
 
-
+void dfs(int y, int x, int cnt, vector<bool>& isVisited){
+    answer = max(answer, cnt);
+    for(int i=0; i<4; i++){
+        int ny = y + dy[i];
+        int nx = x + dx[i];
+        if(0<=ny && ny<n && 0<=nx && nx<m){
+            char alphabet = bd[ny][nx];
+            if(!isVisited[alphabet - 'A']){
+                isVisited[alphabet - 'A'] = true;
+                dfs(ny, nx, cnt + 1, isVisited);
+                isVisited[alphabet - 'A'] = false;
+            }
+        }
+    }
+}
 
 
 int main()

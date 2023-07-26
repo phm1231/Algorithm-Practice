@@ -1,102 +1,94 @@
-#include <string>
-#include <vector>
-#include <queue>
-#include <iostream>
-#include <algorithm>
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
-using namespace std;
-void makeWaiting(const vector<vector<int> >& reqs, int k);
-int getWaitTime(const int type, const int numberofMento);
-void dfs(const int, const int, vector<int>&);
-
-vector<vector<pair<int, int> > > waiting; // waiting[type] = {startTime, endTime}
-vector<vector<int> > memo;
-int answer, N, K;
-
-void dfs(const int sum, const int depth, vector<int>& v){
-
-    if(sum > N) return;
-    if(depth == K && sum < N) return;
-    
-    // 자연수를 k개 골랐고, 그 수의 합이 sum임
-    if(depth == K && sum == N){
-        // v[i] = i번 type에서 사용할 Mento의 수
-        int tmp = 0;
-        for(int i=0; i<v.size(); i++){
-            int type = i+1;
-            int numberofMento = v[i];
-            tmp += memo[type][numberofMento];
-        }
-        answer = min(answer, tmp);
-        return;
-    }
-    
-    for(int i=1; i<=N; i++){
-        v.push_back(i);
-        dfs(sum + i, depth + 1, v);
-        v.pop_back();
-    }
-}
-
-
-int solution(int k, int n, vector<vector<int>> reqs) {
-    answer = 987654321;
-    makeWaiting(reqs, k);
-    memo.resize(k+1, vector<int>(n+1, 0));
-    N = n;
-    K = k;
-    
-    // memo[type][i] = type에 멘토가 i명 배치되었을 때 걸리는 대기 시간
-    for(int type=1; type<=k; type++){
-        for(int i=1; i<=n; i++){
-            memo[type][i] = getWaitTime(type, i);
-            if(memo[type][i] == 0) break;
+public class Main {
+    class Pos{
+        int r, c, d, dist;
+        public Pos(int r, int c, int d, int dist) {
+            this.r = r;
+            this.c = c;
+            this.d = d;
+            this.dist = dist;
         }
     }
-    
-    /*
-    for(int type=1; type<=k; type++){
-        for(int i=1; i<=n; i++){
-            cout << memo[type][i] << ' '; 
-        }
-        cout << endl;
-    }
-     */
-    
-    // 1이상인 자연수 k개로 이루어진 덧셈 중 합이 n이 되는 수
-    vector<int> v;
-    dfs(0, 0, v);
-    return answer;
-}
 
+    private static final int[] DR = {0, 1, -1, 0, 0};
+    private static final int[] DC = {0, 0, 0, 1, -1};
+    int n;
 
-int getWaitTime(const int type, const int numberofMento){
-    int waitTime = 0;
-    int currentTime = 0;
-    priority_queue<int> pq;
-
-    for(int i=0; i<waiting[type].size(); i++){
-        int start = waiting[type][i].first;
-        int duration = waiting[type][i].second;
-
-        while(pq.size() >= numberofMento){
-            currentTime = -pq.top();
-            pq.pop();
-        }
-        currentTime = max(currentTime, start);
-        waitTime += (currentTime - start);
-        pq.push(-(currentTime + duration));
+    private int getDivision(int r, int c) {
+        if (r<0 || c<0 || r>=4*n || c>=4*n) return -1;
+        return r/4*4+c/4;
     }
 
-    return waitTime;
-}
+    private int[] getRotatedPos(int r, int c) {
+        int baseR = r/4*4;
+        int baseC = c/4*4;
+        r %= 4;
+        c %= 4;
+        return new int[]{baseR+c, baseC+3-r};
+    }
 
-void makeWaiting(const vector<vector<int> >& reqs, int k){
-    waiting.resize(k+1, vector<pair<int, int> >());
-    for(int i=0; i<reqs.size(); i++){
-        int startTime = reqs[i][0];
-        int duration = reqs[i][1];
-        int type = reqs[i][2];
-        waiting[type].push_back({startTime, duration});
-    }   
+    private void solution() throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in), 1<<16);
+
+        n = Integer.parseInt(br.readLine());
+        char[][][] arr = new char[4][n*4][n*4];
+        Pos start = null;
+        for (int i = 0; i < 4*n; i++) {
+            String row = br.readLine();
+            for (int j = 0; j < 4*n; j++) {
+                char c = row.charAt(j);
+                arr[0][i][j] = c;
+                if (c=='S') {
+                    start = new Pos(i, j, 0, 0);
+                }
+                int tmpI = i;
+                int tmpJ = j;
+                for (int x = 1; x <= 3; x++) {
+                    int[] nextPos = getRotatedPos(tmpI, tmpJ);
+                    tmpI = nextPos[0];
+                    tmpJ = nextPos[1];
+                    arr[x][tmpI][tmpJ] = c;
+                }
+            }
+        }
+
+        boolean[][][] v = new boolean[4][n*4][n*4];
+        Queue<Pos> q = new ArrayDeque<>();
+        q.add(start);
+        v[0][start.r][start.c] = true;
+        while (!q.isEmpty()) {
+            Pos cur = q.poll();
+            int r = cur.r;
+            int c = cur.c;
+            int d = cur.d;
+            if (arr[d][r][c] == 'E') {
+                System.out.println(cur.dist);
+                return;
+            }
+            int cDiv = getDivision(r, c);
+            for (int dir = 0; dir < 5; dir++) {
+                int nr = r+DR[dir];
+                int nc = c+DC[dir];
+                int nDiv = getDivision(nr, nc);
+                if (nDiv == -1) continue;
+                int nd = cDiv == nDiv ? (d+1)%4 : 1;
+                int[] nrc = getRotatedPos(nr, nc);
+                nr = nrc[0];
+                nc = nrc[1];
+
+                if (v[nd][nr][nc] || arr[nd][nr][nc] == '#') continue;
+                v[nd][nr][nc] = true;
+                q.add(new Pos(nr, nc, nd, cur.dist+1));
+            }
+        }
+        System.out.println(-1);
+    }
+
+    public static void main(String[] args) throws Exception {
+        new Main().solution();
+    }
 }

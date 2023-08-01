@@ -1,0 +1,103 @@
+// based problem:
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+#define ll long long
+#define MAX 100001
+
+void init();
+void input();
+void solve();
+void dfs(int y, int x, int sum, int depth);
+void getT(int y, int x);
+int n, m;
+int answer;
+int dy[] = {-1, 0, 1, 0};
+int dx[] = {0, -1, 0, 1};
+vector<vector<int> > bd;
+vector<vector<bool> > visited;
+
+void init()
+{
+    cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
+}
+
+void input()
+{
+    cin >> n >> m;
+    bd.resize(n, vector<int>(m, 0));
+    visited.resize(n, vector<bool>(m, false));
+
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
+            cin >> bd[i][j];
+        }
+    }
+}
+
+void solve()
+{
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
+            visited[i][j] = true;
+            dfs(i, j, 0, 0);
+            getT(i, j);
+            visited[i][j] = false;
+        }
+    }
+    cout << answer;
+}
+
+void dfs(int y, int x, int sum, int depth){
+    if(depth == 4){
+        answer = max(answer, sum);
+        return;
+    }
+    for(int i=0; i<4; i++){
+        int ny = y + dy[i];
+        int nx = x + dx[i];
+        if(0 <= ny && ny < n && 0 <= nx && nx < m){
+            if(!visited[ny][nx]){
+                visited[ny][nx] = true;
+                dfs(ny, nx, sum + bd[ny][nx], depth + 1);
+                visited[ny][nx] = false;
+            }
+        }
+    }
+}
+
+void getT(int y, int x){
+    int cnt = 0;
+    int sum = bd[y][x];
+    for(int i=0; i<4; i++){
+        int ny = y + dy[i];
+        int nx = x + dx[i];
+        if(0 <= ny && ny < n && 0 <= nx && nx < m){
+            sum += bd[ny][nx];
+            cnt++;
+        }
+    }
+    if(cnt == 3){
+        answer = max(answer, sum);
+    }
+    else if(cnt == 4){
+        for(int i=0; i<4; i++){
+            int ny = y + dy[i];
+            int nx = x + dx[i];
+            if(0 <= ny && ny < n && 0 <= nx && nx < m){
+                answer = max(answer, sum - bd[ny][nx]);
+            }
+        }
+    }
+}
+
+
+int main()
+{
+    init();
+    input();
+    solve();
+    return 0;
+}

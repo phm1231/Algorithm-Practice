@@ -3,7 +3,6 @@
 #include <vector>
 
 using namespace std;
-
 #define ll long long
 #define MAX 100001
 

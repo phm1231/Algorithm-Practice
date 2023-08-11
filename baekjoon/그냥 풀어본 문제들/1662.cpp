@@ -32,7 +32,6 @@ void solve()
 
 int dfs(int idx){
     int cnt = 0;
-
     for(int i=idx; i<str.size(); i++){
         if(visited[i]) continue;
 

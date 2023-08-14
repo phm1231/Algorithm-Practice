@@ -3,7 +3,6 @@
 #include <vector>
 
 using namespace std;
-
 #define ll long long
 #define MAX 100001
 
@@ -14,7 +13,7 @@ void solve();
 int n, k;
 vector<int> weights;
 vector<int> values;
-
+int dp[101][100001] = {0, };
 
 void init()
 {
@@ -31,19 +30,19 @@ void input()
 
 void solve()
 {
-    vector<vector<int> > dp(n+1, vector<int>(100001, 0));
     for(int i=1; i<=n; i++){
-        for(int j=0; j<=k; j++){
+        for(int j=0; j<=k; j++){ // 현재 버틸 수 있는 무게
             if(j - weights[i] >= 0){
                 dp[i][j] = max(dp[i-1][j], dp[i-1][j-weights[i]] + values[i]);
             }
-            else{ㄴ
+            else{
                 dp[i][j] = dp[i-1][j];
             }
         }
     }
     cout << dp[n][k];
 }
+
 
 int main()
 {

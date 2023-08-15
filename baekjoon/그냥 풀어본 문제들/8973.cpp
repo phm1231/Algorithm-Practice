@@ -9,11 +9,11 @@ using namespace std;
 void init();
 void input();
 void solve();
+int getNumber(int s, int e);
 
 int n;
 vector<ll> s1, s2;
-vector<vector<ll> > dp(2001, vector<ll>(2001, 0)); 
-// dp[i][j] = 앞에서 i개, 뒤에서 J개를 지웠을 때 흐린 수.
+vector<vector<ll> > dp(2001, vector<ll>(2001, -999999999999)); 
 
 void init()
 {
@@ -26,42 +26,47 @@ void input()
     s1.resize(n, 0);
     s2.resize(n, 0);
     for(int i=0; i<n; i++) cin >> s1[i];
-    for(int i=n-1; i>=0; i--) cin >> s2[i];
+    for(int i=0; i<n; i++) cin >> s2[i];
 }
 
 void solve()
 {
     for(int i=0; i<n; i++){
-        dp[0][0] += (s1[i] * s2[i]);
-    }
-    for(int i=1; i<n; i++){
-        dp[i][0] = dp[i-1][0] - (s1[i-1] * s2[i-1]);
-        dp[0][i] = dp[0][i-1] - (s1[n-i] * s2[n-i]);
-    }
-    for(int i=1; i<n; i++){
-        for(int j=1; j<n; j++){
-            dp[i][j] = dp[0][j] - dp[i][0];
+        for(int j=0; j<n; j++){
+            if(i + j >= n) continue;
+            // if(i == j && i != 0) dp[i][j] = dp[i-1][j-1] - (s1[i-1] * s2[n-1-i] + s1[n-1-j] * s2[j-1]);
+            dp[i][j] = getNumber(i, j);
         }
     }
 
-    int maxValue = -987654321;
+
+    ll maxValue = -999999999999;
     int a, b;
-    cout << "DP\n";
+    // cout << "DP\n";
     for(int i=0; i<n; i++){
         for(int j=0; j<n; j++){
-            cout << dp[i][j] << ' ';
+            if(i + j >= n) continue;
+        //    cout << dp[i][j] << ' ';
             if(maxValue < dp[i][j]){
                 maxValue = dp[i][j];
                 a = i;
                 b = j;
             }
         }
-        cout << "\n";
+        // cout << "\n";
     }
     cout << a << " " << b << "\n" << maxValue;
 
 }
 
+int getNumber(int s, int e){ // 앞에서부터 s개, 뒤에서부터 e개 지움
+    int ret = 0;
+    int cnt = n - (s + e);
+    for(int i=0; i<cnt; i++){
+        ret += s1[i+s] * s2[n-e-1-i];
+    }
+    return ret;
+}
 
 int main()
 {

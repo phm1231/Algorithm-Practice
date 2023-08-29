@@ -1,10 +1,11 @@
-// based problem:
 #include <iostream>
 #include <vector>
 
-using namespace std;
 #define ll long long
 #define MAX 100001
+#define endl "\n";
+
+using namespace std;
 
 void init();
 void input();

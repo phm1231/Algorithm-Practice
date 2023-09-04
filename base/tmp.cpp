@@ -1,63 +1,107 @@
-// based problem:
 #include <iostream>
 #include <vector>
+#include <deque>
+#include <stack>
 #include <queue>
+#include <cstring>
+#include <algorithm>
 
 using namespace std;
 
-#define ll long long
-#define MAX 100001
+int N, M;
+string matstr[1001];
+int mat[1001][1001];
+int mat_val[1001][1001];
+bool visited[1001][1001];
+int dx[4] = { 1, -1, 0, 0 }, dy[4] = {0, 0, 1, -1};
 
-void init();
-void input();
-void solve();
+int answer[1001][1001] = {0, };
 
-int n;
+vector<pair<int, int>> v_p;
 
-void init()
-{
-    cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
+void dfs(int x, int y, int &cnt, vector<vector<bool>>& visited_s) {
+   for (int i = 0; i < 4; i++) {
+      int nx = x + dx[i];
+      int ny = y + dy[i];
+      if (0 <= nx && nx < N && 0 <= ny && ny < M && !visited[nx][ny] && mat[nx][ny] == 0) {
+         visited[nx][ny] = true;
+         dfs(nx, ny, ++cnt, visited_s);
+      }
+      else if (mat[nx][ny] == 1) {
+         if (!visited_s[nx][ny]) {
+            visited_s[nx][ny] = true;
+            v_p.push_back({ nx, ny });
+         }
+      }
+   }
 }
 
-void input()
-{
-    cin >> n;
-}
+int bfs(int sx, int sy, vector<vector<bool>>& visited_s) {
+   int cnt = 0;
 
-void solve()
-{
-    priority_queue<int> maxQ; // 작은 값들 중 최댓값
-    priority_queue<int, vector<int>, greater<int> > minQ; // 큰 값들 중 최솟값
+   queue<pair<int, int> > q;
+   q.push(make_pair(sx, sy));
+   visited_s[sx][sy] = true;
 
-    for(int i=0; i<n; i++){
-        int tmp;
-        cin >> tmp;
+   while(!q.empty()){
+      int x = q.front().first;
+      int y = q.front().second;
+      q.pop();
 
-        // 최대 힙의 크기는 최소 힙의 크기보다 같거나 1개 더 크다.
-        if(maxQ.empty()) maxQ.push(tmp);
-        else if(maxQ.size() == minQ.size()) maxQ.push(tmp);
-        else minQ.push(tmp);
+      for (int i = 0; i < 4; i++) {
+         int nx = x + dx[i];
+         int ny = y + dy[i];
+         if (0 <= nx && nx < N && 0 <= ny && ny < M && !visited[nx][ny] && mat[nx][ny] == 0) {
+            cnt++;
+            visited[nx][ny] = true;
+            q.push(make_pair(nx, ny));
+         }
+         else if (mat[nx][ny] == 1) {
+            if (!visited_s[nx][ny]) {
+               visited_s[nx][ny] = true;
+               v_p.push_back({ nx, ny });
+            }
+         }
+      }
+   }
 
-        // 최대 힙의 top은 최소 힙의 top보다 작거나 같아야한다.
-        if(!maxQ.empty() && !minQ.empty() && !(maxQ.top() <= minQ.top())){
-            // 그렇지 않으면 swap한다.
-            int maxTop = maxQ.top();
-            int minTop = minQ.top();
-            maxQ.pop();
-            minQ.pop();
-
-            maxQ.push(minTop);
-            minQ.push(maxTop);
-        }
-        // 최대 힙의 Top은 항상 중간값이다.
-        cout << maxQ.top() << "\n";
-    }
+   return cnt;
 }
 
 int main()
 {
-    init();
-    input();
-    solve();
-    return 0;
+   cin.tie(0); cout.tie(0); ios_base::sync_with_stdio(false);
+   cin >> N >> M;
+   for (int i = 0; i < N; i++) {
+      cin >> matstr[i];
+      for (int j = 0; j < M; j++) {
+         mat[i][j] = matstr[i][j] == '1' ? 1 : 0;
+      }
+   }
+   // 빈칸들이 몇개씩 이어져 있는지 계산
+   int idx = 0;
+   for (int i = 0; i < N; i++) {
+      for (int j = 0; j < M; j++) {
+         vector<vector<bool>> visited_s(N, vector<bool>(M, false));
+         if (mat[i][j] == 0 && !visited[i][j]) {
+            int cnt = bfs(i, j, visited_s);
+            while (!v_p.empty()) {
+               pair<int, int> p = v_p.back();
+               answer[p.first][p.second] += cnt;
+               answer[p.first][p.second] %= 10;
+               v_p.pop_back();
+            }
+            idx++;
+         }
+      }
+   }
+
+   for (int i = 0; i < N; i++) {
+      for (int j = 0; j < M; j++) {
+         cout << answer[i][j];
+      }
+      cout << '\n';
+   }
+
+   return 0;
 }

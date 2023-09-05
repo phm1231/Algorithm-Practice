@@ -37,7 +37,7 @@ void solve()
         b *= i;
         b %= MOD;
     }
-    ll answer = a / b;
+    ll answer = a / b;1
     if(a % b != 0) answer += a % b;
     cout << answer; 
 }

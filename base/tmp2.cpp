@@ -1,39 +1,36 @@
-int getWaitTime(const int type, const int numberofMento){
-    int waitTime = 0;
-    int currentTime = 0;
-    priority_queue<int> pq; // 상담이 일찍 끝나는 순서대로. first = 끝나는 시간, second = 인덱스
-    
-    for(int i=0; i<waiting[type].size(); i++){
-        int start = waiting[type][i].first; // 상담 요청 시간
-        int duration = waiting[type][i].second; // 걸리는 시간
-        
-        // 일하지 않는 멘토가 있음
-        if(pq.size() < numberofMento){
-            currentTime = start;
-            pq.push(-(currentTime + duration));
-        }
-        // 일하지 않는 멘토가 없음
-        else if(pq.size() == numberofMento){
-            int endTime = -pq.top(); // 가장 빨리 끝나는 상담
-            pq.pop(); // 상담을 끝냄
-            
-            // 이미 끝난 상담이었다면
-            if(endTime <= currentTime){
-                currentTime = start;
-                pq.push(-(currentTime + duration));
-            }
-            // 아직 끝나지 않은 상담이었다면
-            else{
-                currentTime = endTime; // 일단 끝내주고
-                // 아직 시간이 남음.
-                if(currentTime <= start) currentTime = start;
-                // 아님
-                else{
-                    waitTime += (currentTime - start);
-                }
-                pq.push(-(currentTime + duration));
-            }
-        }
-    }
-    return waitTime;
+#include<iostream>
+#include<string>
+using namespace std;
+ 
+int main(void) {
+    int result1 = 1;
+    int result2 = 2;
+    int result3 = 3;
+    int result4 = 4;
+ 
+    // 일부 복사
+    cout << "1. 특정변수 복사" << endl;
+    [result1, result2](int a, int b) { 
+        cout << "result1, result2 : " << result1 << ", " << result2 << endl;
+        cout << "result1 + a + b : " << result1 + a + b << endl;
+ 
+        // 복사한 변수에는 대입 불가능
+        // result1 = a + b; 
+        // result2 = 99999;
+    }(10, 20);
+ 
+ 
+ 
+    // 일부 참조
+    cout << "2. 특정변수 참조" << endl;
+    [&result3, &result4](int a, int b) {
+        result3 = 22222;
+        cout << "(내부) result3 : " << result3 << endl;
+        result4 = a + b;
+    }(10, 20);
+ 
+    cout << "(외부) result3, result4 : " << result3 << ", " << result4 << endl;
+ 
+    return 0;
 }
+ 

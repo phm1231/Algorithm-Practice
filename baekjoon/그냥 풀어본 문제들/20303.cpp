@@ -59,6 +59,8 @@ void solve()
         group.push_back(make_pair(cnt, v.size())); // group[i]를 털면 사탕을 cnt개 털 수 있고, size명의 아이들이 운다.
     }
 
+    for(pair<int, int> p: group) cout << p.first << ", " << p.second << endl;
+
     vector<vector<int> > dp(group.size() + 1, vector<int>(k+1, 0)); // dp[i][j] = i번째 그룹을 텀, j번째 명까지 울림.
     int siz = group.size();
     for(int i=1; i<=siz; i++){

@@ -1,44 +1,26 @@
 #include <iostream>
-#include <vector>
-
-#define ll long long
-#define MAX 100001
-#define endl "\n";
 
 using namespace std;
 
-void init();
-void input();
-void solve();
-void recur(int);
-
-void init()
-{
-    cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
+// p는 pi의 주솟값
+// q는 pj의 주솟값
+void foo(int** p, int** q) {
+   int* t = *p; // int* t = pi = &i
+   *p = *q; // pi = pj
+   *q = t;
+   **p = 3;
 }
 
-void input()
-{
+int main() {
+   cin.tie(0); cout.tie(0); ios_base::sync_with_stdio(false);
 
-}
+   int i = 1;
+   int j = -1;
+   int* pi = &i;
+   int* pj = &j;
+   foo(&pi, &pj);
 
-void solve()
-{
-   recur(10);
-}
+   cout << *pi << ' ' << *pj;
 
-void recur(int n){
-   if(n < 0) return;
-   cout << n << " ";
-   recur(--n);
-   // recur(n-1)
-}
-
-
-int main()
-{
-    init();
-    input();
-    solve();
-    return 0;
+   return 0;
 }

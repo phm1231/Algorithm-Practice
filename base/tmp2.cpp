@@ -1,36 +1,30 @@
-#include<iostream>
-#include<string>
+#include <iostream>
+#include <ctime>
+
 using namespace std;
- 
-int main(void) {
-    int result1 = 1;
-    int result2 = 2;
-    int result3 = 3;
-    int result4 = 4;
- 
-    // 일부 복사
-    cout << "1. 특정변수 복사" << endl;
-    [result1, result2](int a, int b) { 
-        cout << "result1, result2 : " << result1 << ", " << result2 << endl;
-        cout << "result1 + a + b : " << result1 + a + b << endl;
- 
-        // 복사한 변수에는 대입 불가능
-        // result1 = a + b; 
-        // result2 = 99999;
-    }(10, 20);
- 
- 
- 
-    // 일부 참조
-    cout << "2. 특정변수 참조" << endl;
-    [&result3, &result4](int a, int b) {
-        result3 = 22222;
-        cout << "(내부) result3 : " << result3 << endl;
-        result4 = a + b;
-    }(10, 20);
- 
-    cout << "(외부) result3, result4 : " << result3 << ", " << result4 << endl;
- 
-    return 0;
+
+int a[1000][1000];
+int b[1000][1000];
+int c[1000][1000];
+
+int main(){
+   for(int i=0; i<1000; i++){
+      for(int j=0; j<1000; j++){
+         a[i][j] = i + j;
+         b[i][j] = i - j;
+         c[i][j] = i * j;
+      }
+   }
+
+   volatile long long answer = 0;
+   clock_t start = clock();
+   for(int i=0; i<1000; i++){
+      for(int k=0; k<1000; k++){
+         for(int j=0; j<1000; j++){
+            answer += b[i][k] * c[k][j];
+         }
+      }
+   }
+   clock_t end = clock();
+   cout << "i, k, j time: " << (double)(end - start) - CLOCKS_PER_SEC << endl;
 }
- 

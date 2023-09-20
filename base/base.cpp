@@ -7,22 +7,22 @@
 
 using namespace std;
 
-void init();
-void input();
-void solve();
+void Init();
+void Input();
+void Solve();
 
 
-void init()
+void Init()
 {
     cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
 }
 
-void input()
+void Input()
 {
 
 }
 
-void solve()
+void Solve()
 {
 
 }
@@ -30,8 +30,8 @@ void solve()
 
 int main()
 {
-    init();
-    input();
-    solve();
+    Init();
+    Input();
+    Solve();
     return 0;
 }

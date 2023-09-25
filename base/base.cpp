@@ -2,7 +2,6 @@
 #include <vector>
 
 #define ll long long
-#define MAX 100001
 #define endl "\n";
 
 using namespace std;
@@ -11,6 +10,7 @@ void Init();
 void Input();
 void Solve();
 
+const int MAX = 1e9;
 
 void Init()
 {

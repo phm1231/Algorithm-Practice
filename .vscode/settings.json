@@ -69,6 +69,7 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "queue": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "span": "cpp"
     }
 }
